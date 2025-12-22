@@ -14,16 +14,22 @@ const corsOptions = {
   origin: "https://frontendofimage.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
 };
 
-/* ✅ CORS MIDDLEWARE */
+/* ✅ APPLY CORS GLOBALLY */
 app.use(cors(corsOptions));
 
-/* ✅ HANDLE PREFLIGHT REQUESTS */
-app.options("*", cors(corsOptions));
+/* ✅ HANDLE PREFLIGHT WITHOUT WILDCARD */
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(express.json());
+
+
 
 /* ✅ HEALTH CHECK */
 app.get("/api/health", (req, res) => {
@@ -34,7 +40,6 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-/* ROUTES */
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 
