@@ -1,23 +1,30 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
+const cloudinary = require("../config/cloudinary");
 const auth = require("../middleware/authMiddleware");
 const {
   uploadImage,
   getImages,
-  deleteImage
+  deleteImage,
 } = require("../controllers/imageController");
 
-const upload = multer({ dest: "uploads/" });
+// ✅ Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "photo-safe",
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+  },
+});
 
-// Upload image
+const upload = multer({ storage });
+
+// Routes
 router.post("/upload", auth, upload.single("image"), uploadImage);
-
-// Get user images
 router.get("/", auth, getImages);
-
-// Delete image
 router.delete("/:id", auth, deleteImage);
 
 module.exports = router;
