@@ -10,9 +10,27 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json()); // 🔥 REQUIRED FOR req.body
+/* 🔐 CORS CONFIG */
+app.use(
+  cors({
+    origin: "https://frontendofimage.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
+app.use(express.json());
+
+/* ✅ HEALTH CHECK ROUTE (NO AUTH) */
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "UP",
+    message: "Backend is running",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/* 🔐 PROTECTED ROUTES */
 app.use("/api/auth", authRoutes);
 app.use("/api/images", imageRoutes);
 
