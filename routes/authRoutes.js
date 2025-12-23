@@ -3,10 +3,19 @@ const router = express.Router();
 
 const { register, login } = require("../controllers/authController");
 
-// Register user
-router.post("/register", register);
+const loginRateLimiter = require("../middlewares/rateLimiter");
+const concurrencyLimiter = require("../middlewares/concurrencyLimiter");
 
-// Login user
-router.post("/login", login);
+// Register user (usually less strict)
+router.post("/register", loginRateLimiter, concurrencyLimiter, register);
+
+
+// Login user (STRICT)
+router.post(
+  "/login",
+  loginRateLimiter,
+  concurrencyLimiter,
+  login
+);
 
 module.exports = router;
