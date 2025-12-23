@@ -36,6 +36,7 @@ exports.getVideos = async (req, res) => {
 exports.deleteVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
+
     if (!video) {
       return res.status(404).json({ msg: "Video not found" });
     }
@@ -45,8 +46,11 @@ exports.deleteVideo = async (req, res) => {
     });
 
     await video.deleteOne();
+
     res.json({ msg: "Video deleted" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Delete failed" });
   }
 };
+
