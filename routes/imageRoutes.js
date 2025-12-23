@@ -11,7 +11,7 @@ const {
   deleteImage,
 } = require("../controllers/imageController");
 
-// ✅ Cloudinary storage
+//  Cloudinary storage
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
