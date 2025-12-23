@@ -12,19 +12,16 @@ exports.uploadVideo = async (req, res) => {
       user: req.user,
       videoUrl: req.file.path,
       cloudinaryPublicId: req.file.filename,
-      duration: req.file.duration || null,
+      duration: null, // compute later if needed
     });
 
-    /* 🔐 Return safe fields only */
     res.status(201).json({
       publicId: video.publicId,
       videoUrl: video.videoUrl,
-      duration: video.duration,
       createdAt: video.createdAt,
     });
-
   } catch (err) {
-    console.error(err);
+    console.error("VIDEO UPLOAD ERROR:", err);
     res.status(500).json({ msg: "Video upload failed" });
   }
 };
@@ -32,9 +29,7 @@ exports.uploadVideo = async (req, res) => {
 /* 📥 Get User Videos */
 exports.getVideos = async (req, res) => {
   try {
-    const videos = await Video.find({ user: req.user }).select(
-      "publicId videoUrl duration createdAt"
-    );
+    const videos = await Video.find({ user: req.user }).select("publicId videoUrl duration createdAt");
 
     res.json(videos);
   } catch (err) {

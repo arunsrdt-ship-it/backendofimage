@@ -11,14 +11,14 @@ const {
   deleteVideo,
 } = require("../controllers/videoController");
 
-/* 🎥 Cloudinary Video Storage */
+/* ✅ Correct Cloudinary Video Storage */
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
+  params: async (req, file) => ({
     folder: "photo-safe-videos",
-    resource_type: "video",
-    allowed_formats: ["mp4", "mov", "webm", "mkv"],
-  },
+    resource_type: "video",   // 🔥 MUST be here
+    public_id: `video_${Date.now()}`,
+  }),
 });
 
 const upload = multer({
