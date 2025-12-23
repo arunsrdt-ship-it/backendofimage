@@ -3,8 +3,8 @@ const router = express.Router();
 
 const { register, login } = require("../controllers/authController");
 
-const loginRateLimiter = require("../middlewares/rateLimiter");
-const concurrencyLimiter = require("../middlewares/concurrencyLimiter");
+const loginRateLimiter = require("../middleware/rateLimiter");
+const concurrencyLimiter = require("../middleware/concurrencyLimiter");
 
 // Register user (usually less strict)
 router.post("/register", loginRateLimiter, concurrencyLimiter, register);
